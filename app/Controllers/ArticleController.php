@@ -1,42 +1,26 @@
 <?php
 namespace App\Controllers;
-use App\Models\Article;
-use jcobhams\NewsApi\NewsApi;
-use Twig\Environment;
-use Twig\Loader\FilesystemLoader;
+
+use App\Services\ShowArticleService;
+use App\Template;
+
 
 class ArticleController
 {
-    public function index($token)
+    public function index(): Template
     {
 
-        $newsApi = new NewsApi($token);
+
         $topic = $_GET['topic'] ?? "panda";
-        $json = $newsApi->getEverything($topic);
-//        echo "<pre>";
-//        var_dump($json);
-        if ($json->totalResults === 0){
-            $json = $newsApi->getEverything("panda");
-        }
-        $articles = [];
-        $articlesPerPage = 9;
-        for ($i = 0; $i < $articlesPerPage; $i++) {
 
-            $articles[] = new Article
-            (
-                $json->articles[$i]->title,
-                $json->articles[$i]->author,
-                $json->articles[$i]->description,
-                $json->articles[$i]->url,
-                $json->articles[$i]->urlToImage,
-                $json->articles[$i]->source->name
+        $articles = (new ShowArticleService())->execute($topic);
 
-            );
-        }
-
-        $loader = new FilesystemLoader('Views');
-        $twig = new Environment($loader);
-
-        echo $twig->render('index.view.php', ['articles' => $articles]);
+        return new Template
+        (
+            "index.view.php",
+            [
+                "articles" => $articles->getArticles()
+            ]
+        );
     }
 }
