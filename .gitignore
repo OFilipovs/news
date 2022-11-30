@@ -1,4 +1,4 @@
 .idea/
-../newsApi/vendor
+/vendor
 .DS_Store
 .env
