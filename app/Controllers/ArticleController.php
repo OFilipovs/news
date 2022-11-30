@@ -17,7 +17,7 @@ class ArticleController
 
         return new Template
         (
-            "index.view.php",
+            "index.view",
             [
                 "articles" => $articles->getArticles()
             ]
