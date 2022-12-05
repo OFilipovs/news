@@ -12,6 +12,7 @@
 </head>
 <body class="m-5">
 <div>
+
     <nav id="header" class="w-full z-30 top-5 py-1 bg-white shadow-lg border-b border-teal-300 mt-3">
         <div class="w-full mt-0 px-6 py-2 justify-center flex items-center">
             <label for="menu-toggle" class="cursor-pointer md:hidden block">
@@ -27,11 +28,14 @@
                         <li><a class="inline-block no-underline hover:text-black font-medium text-lg py-2 px-4 lg:-ml-2" href="/?topic=Sport">Sport</a></li>
                         <li><a class="inline-block no-underline hover:text-black font-medium text-lg py-2 px-4 lg:-ml-2" href="/?topic=Stocks">Stocks</a></li>
                         <li><a class="inline-block no-underline hover:text-black font-medium text-lg py-2 px-4 lg:-ml-2" href="/?topic=eSport">E-Sport</a></li>
+                        <li><a class="inline-block no-underline hover:text-black font-medium text-lg py-2 px-4 lg:-ml-2" href="/signup">Sign Up</a></li>
+                        <li><a class="inline-block no-underline hover:text-black font-medium text-lg py-2 px-4 lg:-ml-2" href="/loginForm">Log In</a></li>
                     </ul>
                 </nav>
             </div>
         </div>
-    </nav>
+    </nav >
+    {% block search %}
     <div class="w-full my-2.5">
         <div class="flex justify-center ">
             <form action="/" class="w-3/5">
@@ -40,6 +44,7 @@
             </form>
         </div>
     </div>
+    {% endblock %}
 </div>
 
 

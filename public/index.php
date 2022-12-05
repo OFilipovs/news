@@ -13,6 +13,12 @@ $twig = new Environment($loader);
 
 $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $routes) {
     $routes->addRoute('GET', '/', ['App\Controllers\ArticleController', 'index']);
+    $routes->addRoute('GET', '/signup', ['App\Controllers\LoginController', 'index']);
+    $routes->addRoute('GET', '/registerConfirmation', ['App\Controllers\LoginController', 'registerConfirmation']);
+    $routes->addRoute('POST', '/register', ['App\Controllers\LoginController', 'register']);
+    $routes->addRoute('GET', '/loginForm', ['App\Controllers\LoginController', 'loginForm']);
+    $routes->addRoute('POST', '/login', ['App\Controllers\LoginController', 'login']);
+
 });
 
 // Fetch method and URI from somewhere
