@@ -2,38 +2,40 @@
 
 namespace App\Services;
 
-use PDO;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\DriverManager;
+
 
 class DataBaseService
 {
-    private PDO $connection;
+    private Connection $connection;
     public function __construct()
     {
-        $servername = $_ENV["SERVER"];
-        $username = $_ENV["NAME"];
-        $password = $_ENV["PASSWORD"];
-        $this->connection = new PDO("mysql:host=$servername;dbname=sign_up", $username, $password);
-        $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $connectionParams = [
+            'dbname' => "{$_ENV["DB_NAME"]}",
+            'user' => "{$_ENV["NAME"]}",
+            'password' => "{$_ENV["PASSWORD"]}",
+            'host' => "{$_ENV["DB_HOST"]}",
+            'driver' => 'pdo_mysql',
+        ];
+        $this->connection = DriverManager::getConnection($connectionParams);
+
+
     }
 
     public function writeToTable(UserDetails $user)
     {
-        $sql = "INSERT INTO users (name,email,password) VALUES ('{$user->getUserName()}','{$user->getEmail()}','{$user->getUserPassword()}')";
-        $stmt = $this->connection->prepare($sql);
-        $stmt->execute();
+        $this->connection->insert('users', [
+                'name' => $user->getUserName(),
+                'email' => $user->getEmail(),
+                'password' => $user->getUserPassword()]
+        );
     }
 
     public function retrieveId($email)
     {
-        $sql = "SELECT name,password,userid FROM users WHERE ('$email')";
-        $stmt = $this->connection->prepare($sql);
-        $stmt->bindParam(":userid",$userid,PDO::PARAM_STR);
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_OBJ);
+        return $this->connection->executeQuery("SELECT * FROM Users WHERE email= '{$email}'")->fetchAssociative();
     }
 
-    public function retrieveFromTable()
-    {
 
-    }
 }

@@ -2,9 +2,9 @@
 
 namespace App\Controllers;
 use App\Services\DataBaseService;
+use App\Services\LoginService;
 use App\Services\userDetails;
 use App\Template;
-use PDO;
 use PDOException;
 
 class LoginController
@@ -75,22 +75,33 @@ class LoginController
 
     public function login()
     {
-        $email = $_POST["email"];
-        $password = $_POST["password"];
-        $dataBaseService = new DataBaseService();
-        $row = $dataBaseService->retrieveId($email);
-        var_dump($row);
-        if($row->password==md5($password)){
-            $_SESSION['id']=session_id();
-            $_SESSION['userid']=$row->userid;
-            $_SESSION['userid']=$row->name;
+        $credentials = new LoginService
+        (
+            $_POST["email"],
+            $_POST["password"]
+        ) ;
 
-            $msg=" welcome $_SESSION[name] login successful";
-            echo $msg;
-        } else{
-            $msg = " Login failed, try again ... ";
+        $dataBaseService = new DataBaseService();
+        $row = $dataBaseService->retrieveId($credentials->getEmail());
+        if ($row > 0 && $credentials->authorise($row)){
+            $_SESSION['login_user'] = $row["name"];
+            return new Template
+            (
+                "welcome.twig",
+                [
+                    "name" => $_SESSION['login_user']
+                ]
+            );
+        } else {
+            echo "Wrong pw";
+            header("Location: /login");
         }
-        echo $msg;
+    }
+
+    public function logout()
+    {
+        session_destroy();
+        header("Location: /login");
     }
 
 

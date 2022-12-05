@@ -18,6 +18,7 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $rout
     $routes->addRoute('POST', '/register', ['App\Controllers\LoginController', 'register']);
     $routes->addRoute('GET', '/loginForm', ['App\Controllers\LoginController', 'loginForm']);
     $routes->addRoute('POST', '/login', ['App\Controllers\LoginController', 'login']);
+    $routes->addRoute('GET', '/logout', ['App\Controllers\LoginController', 'logout']);
 
 });
 
