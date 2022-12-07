@@ -9,59 +9,6 @@ use PDOException;
 
 class LoginController
 {
-    public function index(): Template
-    {
-        return new Template
-        (
-            "register.view",
-            [
-
-            ]
-        );
-    }
-
-    public function registerConfirmation(): Template
-    {
-        return new Template
-        (
-            "registerConfirmation.twig",
-            [
-
-            ]
-        );
-
-    }
-
-    public function register(): void
-    {
-        session_start();
-        $nonEmpty = true;
-        $required = ["name", "email", "Password"];
-        foreach ($required as $field){
-            if (empty($_POST[$field])){
-                $nonEmpty = false;
-            }
-        }
-
-        if ($nonEmpty)
-            $dataBaseService = new DataBaseService();
-            try {
-                $dataBaseService->writeToTable(
-                    new UserDetails
-                    (
-                        $_POST["name"],
-                        $_POST["email"],
-                        $_POST["Password"]
-                    )
-                );
-                header('Location: /registerConfirmation');
-            } catch (PDOException $ex){
-                echo "Account with this email exists " . $ex->getMessage();
-//                sleep(3);
-//                header('Location: /register');
-            }
-    }
-
     public function loginForm(): Template
     {
         return new Template
@@ -79,17 +26,18 @@ class LoginController
         (
             $_POST["email"],
             $_POST["password"]
-        ) ;
+        );
 
         $dataBaseService = new DataBaseService();
         $row = $dataBaseService->retrieveId($credentials->getEmail());
+
         if ($row > 0 && $credentials->authorise($row)){
-            $_SESSION['login_user'] = $row["name"];
+            $_SESSION['auth_id'] = $row["id"];
             return new Template
             (
                 "welcome.twig",
                 [
-                    "name" => $_SESSION['login_user']
+                    "name" => $row["name"]
                 ]
             );
         } else {
@@ -100,8 +48,8 @@ class LoginController
 
     public function logout()
     {
-        session_destroy();
-        header("Location: /login");
+        unset($_SESSION["auth_id"]);
+        header("Location: /");
     }
 
 

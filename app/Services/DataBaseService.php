@@ -8,34 +8,76 @@ use Doctrine\DBAL\DriverManager;
 
 class DataBaseService
 {
-    private Connection $connection;
-    public function __construct()
+    private static ?Connection $connection = null;
+    private static DataBaseService $dataBase;
+    public static function getConnection(): ?Connection
     {
-        $connectionParams = [
-            'dbname' => "{$_ENV["DB_NAME"]}",
-            'user' => "{$_ENV["NAME"]}",
-            'password' => "{$_ENV["PASSWORD"]}",
-            'host' => "{$_ENV["DB_HOST"]}",
-            'driver' => 'pdo_mysql',
-        ];
-        $this->connection = DriverManager::getConnection($connectionParams);
+        if (self::$connection == null) {
+            $connectionParams = [
+                'dbname' => "{$_ENV["DB_NAME"]}",
+                'user' => "{$_ENV["NAME"]}",
+                'password' => "{$_ENV["PASSWORD"]}",
+                'host' => "{$_ENV["DB_HOST"]}",
+                'driver' => 'pdo_mysql',
+            ];
+            self::$connection = DriverManager::getConnection($connectionParams);
+        }
+
+        return self::$connection;
 
 
     }
 
-    public function writeToTable(UserDetails $user)
+    public function getDataBase(): DataBaseService
     {
-        $this->connection->insert('users', [
+        if (self::$dataBase == null) {
+            self::$dataBase = new DataBaseService;
+        }
+        return self::$dataBase;
+    }
+
+
+    public function writeToTable(UserDetails $user): void
+    {
+        $this->connection->insert('users',
+            [
                 'name' => $user->getUserName(),
                 'email' => $user->getEmail(),
-                'password' => $user->getUserPassword()]
+                'password' => password_hash($user->getUserPassword(), PASSWORD_DEFAULT)
+            ]
         );
     }
 
-    public function retrieveId($email)
+    public function retrieveId($email): ?array
     {
-        return $this->connection->executeQuery("SELECT * FROM Users WHERE email= '{$email}'")->fetchAssociative();
+        $queryBuilder = DataBaseService::getConnection()->createQueryBuilder();
+        $user = $queryBuilder
+            ->select("*")
+            ->from("users")
+            ->where("email = ?")
+            ->setParameter(0, $email)
+            ->fetchAssociative();
+        return [
+            "id" => $user["userid"],
+            "name" => $user["name"],
+            "email" => $user["email"],
+            "password" => $user["password"]
+        ];
     }
 
-
+    public function retrieveById($id){
+        $queryBuilder = DataBaseService::getConnection()->createQueryBuilder();
+        $user = $queryBuilder
+            ->select("*")
+            ->from("users")
+            ->where("userid = ?")
+            ->setParameter(0, $id)
+            ->fetchAssociative();
+        return [
+            "id" => $user["userid"],
+            "name" => $user["name"],
+            "email" => $user["email"],
+            "password" => $user["password"]
+        ];
+    }
 }

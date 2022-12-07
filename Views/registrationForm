@@ -27,30 +27,39 @@
         <div class="bg-white px-6 py-8 rounded shadow-md text-black w-full">
             <h1 class="mb-8 text-3xl text-center">Sign up</h1>
             <form action="/register" method="post">
+                {% if validationErrors.name %}
+                    <div class="text-red-500">{{ validationErrors.name | first }}</div>
+                {% endif %}
                 <input
                         type="text"
-                        class="block border border-grey-light w-full p-3 rounded mb-4"
+                        value="{{ validInputs.name }}"
+                        class="block border border-grey-light w-full p-3 rounded mb-4 {{ validationErrors.name ? "invalid:border-red-500" : ""}}"
                         name="name"
                         placeholder="Full Name"
                         required
                 />
-
+                {% if validationErrors.email %}
+                    <div class="text-red-500">{{ validationErrors.email | first }}</div>
+                {% endif %}
                 <input
                         type="text"
-                        class="block border border-grey-light w-full p-3 rounded mb-4"
+                        value="{{ validInputs.email }}"
+                        class="block border border-grey-light w-full p-3 rounded mb-4 {{ validationErrors.email ? "invalid:border-red-500" : ""}}"
                         name="email"
                         placeholder="Email"
                         required
                 />
-
+                {% if validationErrors.password %}
+                    <div class="text-red-500">{{ validationErrors.password | first }}</div>
+                {% endif %}
                 <input
-                        class="block border border-grey-light w-full p-3 rounded mb-4"
-                        name="Password" id="Password" type="password" placeholder="Password" onkeyup='passConfirm();'
+                        class="block border border-grey-light w-full p-3 rounded mb-4 {{ validationErrors.password ? "invalid:border-red-500" : ""}}"
+                        name="password" id="Password" type="password" placeholder="Password" onkeyup='passConfirm();'
                         required
                 />
                 <input
-                        class="block border border-grey-light w-full p-3 rounded mb-4"
-                        type="password" placeholder="Confirm Password" id="ConfirmPassword" onkeyup='passConfirm();'
+                        class="block border border-grey-light w-full p-3 rounded mb-4 {{ validationErrors.password ? "invalid:border-red-500" : ""}}"
+                        type="password" name="confirmPassword" placeholder="Confirm Password" id="ConfirmPassword" onkeyup='passConfirm();'
                         required
                 />
                 <span id="Message"></span>

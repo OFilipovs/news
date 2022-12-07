@@ -24,13 +24,30 @@
             <input class="hidden" type="checkbox" id="menu-toggle">
             <div class="hidden md:flex md:items-center md:w-auto w-full order-3 md:order-1" id="menu">
                 <nav>
-                    <ul class="md:flex items-center justify-between text-base text-blue-600 pt-4 md:pt-0">
-                        <li><a class="inline-block no-underline hover:text-black font-medium text-lg py-2 px-4 lg:-ml-2" href="/?topic=Sport">Sport</a></li>
-                        <li><a class="inline-block no-underline hover:text-black font-medium text-lg py-2 px-4 lg:-ml-2" href="/?topic=Stocks">Stocks</a></li>
-                        <li><a class="inline-block no-underline hover:text-black font-medium text-lg py-2 px-4 lg:-ml-2" href="/?topic=eSport">E-Sport</a></li>
-                        <li><a class="inline-block no-underline hover:text-black font-medium text-lg py-2 px-4 lg:-ml-2" href="/signup">Sign Up</a></li>
-                        <li><a class="inline-block no-underline hover:text-black font-medium text-lg py-2 px-4 lg:-ml-2" href="/loginForm">Log In</a></li>
-                    </ul>
+                    <div>
+                        <ul class="md:flex items-center justify-between text-base text-blue-600 pt-4 md:pt-0">
+                            <li><a class="inline-block no-underline hover:text-black font-medium text-lg py-2 px-4 lg:-ml-2" href="/?topic=Sport">Sport</a></li>
+                            <li><a class="inline-block no-underline hover:text-black font-medium text-lg py-2 px-4 lg:-ml-2" href="/?topic=Stocks">Stocks</a></li>
+                            <li><a class="inline-block no-underline hover:text-black font-medium text-lg py-2 px-4 lg:-ml-2" href="/?topic=eSport">E-Sport</a></li>
+                            <li><a class="inline-block no-underline hover:text-black font-medium text-lg py-2 px-4 lg:-ml-2" href="/signup">Sign Up</a></li>
+                            <li><a class="inline-block no-underline hover:text-black font-medium text-lg py-2 px-4 lg:-ml-2" href="/loginForm">Log In</a></li>
+                            <li><a class="inline-block no-underline hover:text-black font-medium text-lg py-2 px-4 lg:-ml-2" href="/logout">Log Out</a></li>
+                        </ul>
+                    </div>
+                    {% if auth.id is defined %}
+                    <div>
+                        <ul class="md:flex justify-between text-base text-blue-600 pt-4 md:pt-0">
+                            <li><a class="inline-block no-underline hover:text-black font-medium text-lg py-2 px-4 lg:-ml-2" href="/logout">Welcome, {{ auth.name }}</a></li>
+                        </ul>
+                    </div>
+                    {% endif %}
+                    {% if auth.id is defined %}
+                        <div>
+                            <ul class="md:flex justify-between text-base text-blue-600 pt-4 md:pt-0">
+                                <li><a class="inline-block no-underline hover:text-black font-medium text-lg py-2 px-4 lg:-ml-2" href="/changeForm">Manage Account</a></li>
+                            </ul>
+                        </div>
+                    {% endif %}
                 </nav>
             </div>
         </div>
